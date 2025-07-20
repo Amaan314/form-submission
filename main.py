@@ -56,6 +56,10 @@ def send_email(subject: str, body: str, sender_email: str, sender_password: str)
 
 # --- Routes ---
 
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the Contact API. Use /portfolio-contact, /lab-contact, or /real-estate-contact to submit forms."}
+
 @app.post("/portfolio-contact")
 def portfolio_contact(form: PortfolioContactForm):
     try:
