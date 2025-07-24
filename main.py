@@ -30,6 +30,7 @@ origins = [
     "http://localhost:8000", # If your HTML is served from a specific port
     # Add the actual domain where your real estate webpage is hosted
     "https://ssdnrealestate.com",
+    "http://ssdnrealestate.com/",   "https://burnernzetohost.github.io/ssdnrealestate/", 
     "http://127.0.0.1", # Another common localhost variant
     "http://127.0.0.1:8000", # Specific port variant
     # If running on Vercel or similar, you might need to add vercel's domain
