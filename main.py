@@ -20,7 +20,30 @@ LAB_PASSWORD = os.getenv("LAB_PASSWORD")
 REALESTATE_EMAIL = os.getenv("REALESTATE_EMAIL")
 REALESTATE_PASSWORD = os.getenv("REALESTATE_PASSWORD")
 
+from fastapi.middleware.cors import CORSMiddleware
+
+
 app = FastAPI()
+
+origins = [
+    "http://localhost", # If you are serving your HTML from http://localhost
+    "http://localhost:8000", # If your HTML is served from a specific port
+    # Add the actual domain where your real estate webpage is hosted
+    "https://ssdnrealestate.com",
+    "http://127.0.0.1", # Another common localhost variant
+    "http://127.0.0.1:8000", # Specific port variant
+    # If running on Vercel or similar, you might need to add vercel's domain
+    # or use a more permissive setting for testing, but be cautious in production
+    # "https://contact-form-submission.vercel.app" # If the frontend is on the same Vercel project
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True, # Allow cookies, authorization headers, etc.
+    allow_methods=["*"],    # Allow all standard methods (GET, POST, PUT, DELETE, OPTIONS)
+    allow_headers=["*"],    # Allow all headers from the client
+)
 
 # --- Pydantic Models ---
 
