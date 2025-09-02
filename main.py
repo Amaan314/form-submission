@@ -28,7 +28,7 @@ app = FastAPI()
 origins = [
     "http://localhost:8000",
     "http://localhost:3000",
-    "https://amaanp.netlify.app"
+    "https://amaanp.netlify.app",
     "https://ssdnrealestate.com",
 ]
 
