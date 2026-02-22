@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import smtplib
 from email.message import EmailMessage
@@ -22,6 +23,23 @@ REALESTATE_PASSWORD = os.getenv("REALESTATE_PASSWORD")
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:8000",
+    "http://localhost:3000",
+    "https://amaanp.netlify.app",
+    "https://ssdnrealestate.com",
+    "https://auto-parts-service.vercel.app",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True, # Allow cookies, authorization headers, etc.
+    allow_methods=["*"],    # Allow all standard methods (GET, POST, PUT, DELETE, OPTIONS)
+    allow_headers=["*"],    # Allow all headers from the client
+)
+
+
 # --- Pydantic Models ---
 
 class PortfolioContactForm(BaseModel):
@@ -40,6 +58,12 @@ class RealEstateContactForm(BaseModel):
     email: str
     phone: str
     message: str
+
+class AutoPartsContactForm(BaseModel):
+    fullName: str
+    email: str
+    phone: str
+    partsRequired: str
 
 # --- Helper function ---
 
@@ -93,5 +117,26 @@ def real_estate_contact(form: RealEstateContactForm):
         )
         send_email(subject, body, REALESTATE_EMAIL, REALESTATE_PASSWORD)
         return JSONResponse(content={"message": "Real estate contact submitted successfully!"}, status_code=200)
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@app.post("/autoparts-contact")
+def autoparts_contact(form: AutoPartsContactForm):
+    try:
+        subject = f"Auto Parts Inquiry from {form.fullName}"
+        body = (
+            f"Full Name: {form.fullName}\n"
+            f"Email: {form.email}\n"
+            f"Phone: {form.phone}\n\n"
+            f"Parts Required:\n{form.partsRequired}"
+        )
+
+        # Using portfolio credentials for now
+        send_email(subject, body, PORTFOLIO_EMAIL, PORTFOLIO_PASSWORD)
+
+        return JSONResponse(
+            content={"message": "Auto parts inquiry submitted successfully!"},
+            status_code=200
+        )
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
