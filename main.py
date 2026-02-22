@@ -21,6 +21,9 @@ LAB_PASSWORD = os.getenv("LAB_PASSWORD")
 REALESTATE_EMAIL = os.getenv("REALESTATE_EMAIL")
 REALESTATE_PASSWORD = os.getenv("REALESTATE_PASSWORD")
 
+from fastapi.middleware.cors import CORSMiddleware
+
+
 app = FastAPI()
 
 origins = [
@@ -38,7 +41,6 @@ app.add_middleware(
     allow_methods=["*"],    # Allow all standard methods (GET, POST, PUT, DELETE, OPTIONS)
     allow_headers=["*"],    # Allow all headers from the client
 )
-
 
 # --- Pydantic Models ---
 
