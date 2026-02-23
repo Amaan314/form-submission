@@ -32,6 +32,7 @@ origins = [
     "https://amaanp.netlify.app",
     "https://ssdnrealestate.com",
     "https://auto-parts-service.vercel.app",
+    "https://parts-ashen.vercel.app",
 ]
 
 app.add_middleware(
