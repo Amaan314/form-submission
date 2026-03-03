@@ -21,6 +21,8 @@ LAB_PASSWORD = os.getenv("LAB_PASSWORD")
 REALESTATE_EMAIL = os.getenv("REALESTATE_EMAIL")
 REALESTATE_PASSWORD = os.getenv("REALESTATE_PASSWORD")
 
+AUTO_PARTS_EMAIL = os.getenv("AUTO_PARTS_EMAIL")
+
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -33,6 +35,7 @@ origins = [
     "https://ssdnrealestate.com",
     "https://auto-parts-service.vercel.app",
     "https://parts-ashen.vercel.app",
+    "https://optimusautoparts.com",
 ]
 
 app.add_middleware(
@@ -70,11 +73,11 @@ class AutoPartsContactForm(BaseModel):
 
 # --- Helper function ---
 
-def send_email(subject: str, body: str, sender_email: str, sender_password: str):
+def send_email(subject: str, body: str, sender_email: str, receiver_email: str, sender_password: str):
     msg = EmailMessage()
     msg['Subject'] = subject
     msg['From'] = sender_email
-    msg['To'] = sender_email 
+    msg['To'] = receiver_email
     msg.set_content(body)
 
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
@@ -92,7 +95,7 @@ def portfolio_contact(form: PortfolioContactForm):
     try:
         subject = f"Portfolio Message from {form.name}"
         body = f"Name: {form.name}\nEmail: {form.email}\n\nMessage:\n{form.message}"
-        send_email(subject, body, PORTFOLIO_EMAIL, PORTFOLIO_PASSWORD)
+        send_email(subject, body, PORTFOLIO_EMAIL, PORTFOLIO_EMAIL, PORTFOLIO_PASSWORD)
         return JSONResponse(content={"message": "Portfolio message sent successfully!"}, status_code=200)
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
@@ -105,7 +108,7 @@ def lab_contact(form: LabContactForm):
             f"Name: {form.name}\nEmail: {form.email}\nPhone: {form.phone}\n"
             f"Medicare ID: {form.medicare_id}"
         )
-        send_email(subject, body, LAB_EMAIL, LAB_PASSWORD)
+        send_email(subject, body, LAB_EMAIL, LAB_EMAIL, LAB_PASSWORD)
         return JSONResponse(content={"message": "Lab contact submitted successfully!"}, status_code=200)
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
@@ -118,7 +121,7 @@ def real_estate_contact(form: RealEstateContactForm):
             f"Name: {form.name}\nEmail: {form.email}\nPhone: {form.phone}\n\n"
             f"Message:\n{form.message}"
         )
-        send_email(subject, body, REALESTATE_EMAIL, REALESTATE_PASSWORD)
+        send_email(subject, body, REALESTATE_EMAIL, REALESTATE_EMAIL, REALESTATE_PASSWORD)
         return JSONResponse(content={"message": "Real estate contact submitted successfully!"}, status_code=200)
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
@@ -135,7 +138,7 @@ def autoparts_contact(form: AutoPartsContactForm):
         )
 
         # Using portfolio credentials for now
-        send_email(subject, body, PORTFOLIO_EMAIL, PORTFOLIO_PASSWORD)
+        send_email(subject, body, PORTFOLIO_EMAIL, AUTO_PARTS_EMAIL, PORTFOLIO_PASSWORD)
 
         return JSONResponse(
             content={"message": "Auto parts inquiry submitted successfully!"},
