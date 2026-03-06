@@ -70,6 +70,7 @@ class AutoPartsContactForm(BaseModel):
     email: str
     phone: str
     partsRequired: str
+    smsConsent: bool
 
 # --- Helper function ---
 
@@ -134,7 +135,8 @@ def autoparts_contact(form: AutoPartsContactForm):
             f"Full Name: {form.fullName}\n"
             f"Email: {form.email}\n"
             f"Phone: {form.phone}\n\n"
-            f"Parts Required:\n{form.partsRequired}"
+            f"Parts Required:\n{form.partsRequired}\n"
+            f"SMS Consent: {'Yes' if form.smsConsent else 'No'}\n\n"
         )
 
         # Using portfolio credentials for now
