@@ -72,6 +72,17 @@ class AutoPartsContactForm(BaseModel):
     partsRequired: str
     smsConsent: bool
 
+class CarPartsEnquiryForm(BaseModel):
+    name: str
+    phone: str
+    part: str
+
+class CarPartsContactForm(BaseModel):
+    name: str
+    email: str
+    phone: str
+    message: str
+
 # --- Helper function ---
 
 def send_email(subject: str, body: str, sender_email: str, receiver_email: str, sender_password: str):
@@ -146,5 +157,30 @@ def autoparts_contact(form: AutoPartsContactForm):
             content={"message": "Auto parts inquiry submitted successfully!"},
             status_code=200
         )
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+    
+@app.post("/carparts-enquiry")
+def carparts_enquiry(form: CarPartsEnquiryForm):
+    try:
+        subject = f"Car Parts Enquiry from {form.name}"
+        body = f"Name: {form.name}\nPhone: {form.phone}\nPart Requested: {form.part}"
+        send_email(subject, body, PORTFOLIO_EMAIL, PORTFOLIO_EMAIL, PORTFOLIO_PASSWORD)
+        return JSONResponse(content={"message": "Enquiry sent successfully!"}, status_code=200)
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@app.post("/carparts-contact")
+def carparts_contact(form: CarPartsContactForm):
+    try:
+        subject = f"Car Parts Contact from {form.name}"
+        body = (
+            f"Name: {form.name}\n"
+            f"Email: {form.email}\n"
+            f"Phone: {form.phone}\n\n"
+            f"Message:\n{form.message}"
+        )
+        send_email(subject, body, PORTFOLIO_EMAIL, PORTFOLIO_EMAIL, PORTFOLIO_PASSWORD)
+        return JSONResponse(content={"message": "Contact message sent successfully!"}, status_code=200)
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
