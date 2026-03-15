@@ -36,6 +36,8 @@ origins = [
     "https://auto-parts-service.vercel.app",
     "https://parts-ashen.vercel.app",
     "https://optimusautoparts.com",
+    "https://my-car-parts.vercel.app",
+    "https://my-car-parts.com",
 ]
 
 app.add_middleware(
